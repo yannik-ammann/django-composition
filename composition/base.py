@@ -82,6 +82,15 @@ class CompositionField(object):
     def introspect_class(self, cls):
         pass
 
+    def deconstruct(self):
+        """
+        Django Migration support (Django > 1.7), supersedes south_field_triple()
+        https://docs.djangoproject.com/en/1.8/howto/custom-model-fields/#custom-field-deconstruct-method
+        """
+        name, path, args, kwargs = super(CompositionField, self).deconstruct()
+        path = self._c_native.__class__.__module__ + "." + self._c_native.__class__.__name__
+        return name, path, args, kwargs
+
     def south_field_triple(self):
         """
         Returns a suitable description of this field for South.
